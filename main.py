@@ -6,6 +6,8 @@ Main entry point
 import cv2
 import time
 import argparse
+import serial
+
 from core.detector import DriverMonitor
 from core.alert import AlertSystem
 from utils.display import Dashboard
@@ -37,6 +39,11 @@ def main():
     alert_sys = AlertSystem(save_log=args.save_log)
     dashboard = Dashboard()
 
+    arduino = serial.Serial('COM9', 9600, timeout=1)
+    time.sleep(2)
+
+    print("[INFO] Arduino connected.")
+
     cap = cv2.VideoCapture(args.camera)
     if not cap.isOpened():
         print("[ERROR] Cannot open camera. Check camera index.")
@@ -61,7 +68,10 @@ def main():
 
         # Core analysis
         result = monitor.analyze(frame)
-
+        if result.drowsy:
+            arduino.write(b'D') #Drowsy
+        else:
+            arduino.write(b'A') #Alert
         # Trigger alerts based on result
         alert_sys.process(result)
 
