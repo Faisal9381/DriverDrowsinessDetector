@@ -6,6 +6,7 @@ opencv-python>=4.8.0
 mediapipe>=0.10.0
 numpy>=1.24.0
 scipy>=1.10.0
+pyserial>=3.5
 
 # Deep learning (for train_model.py)
 tensorflow>=2.13.0        # or: torch torchvision
